@@ -1,101 +1,343 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>I Love You 💖</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Snake — Game Rắn Săn Mồi</title>
+  <meta name="description" content="Game Rắn săn mồi đơn giản - chơi trên GitHub Pages" />
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: radial-gradient(circle at center, #ff9a9e, #fad0c4);
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      font-family: "Poppins", sans-serif;
-      color: white;
-      text-align: center;
+    :root{
+      --bg:#0f1724;
+      --panel:#0b1220;
+      --accent:#ff6b6b;
+      --muted:#9aa6b2;
+      --card:#0b1320;
     }
-
-    h1 {
-      font-size: 4rem;
-      animation: pop 1.5s ease forwards;
-      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
-      z-index: 10;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg),#071024);color:#e6eef6}
+    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{
+      width:100%;max-width:920px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);display:flex;gap:18px;align-items:flex-start;
     }
-
-    p {
-      font-size: 1.3rem;
-      opacity: 0.8;
-      z-index: 10;
-    }
-
-    @keyframes pop {
-      0% { transform: scale(0); opacity: 0; }
-      60% { transform: scale(1.2); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-
-    .heart {
-      position: fixed;
-      width: 20px;
-      height: 20px;
-      background: red;
-      transform: rotate(45deg);
-      animation: floatUp 4s linear infinite;
-    }
-
-    .heart::before,
-    .heart::after {
-      content: '';
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: red;
-      border-radius: 50%;
-    }
-
-    .heart::before {
-      top: -10px;
-      left: 0;
-    }
-
-    .heart::after {
-      left: -10px;
-      top: 0;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(0) rotate(45deg);
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-600px) rotate(45deg);
-        opacity: 0;
-      }
+    .left{flex:1;display:flex;flex-direction:column;gap:12px;align-items:center}
+    canvas{background:linear-gradient(180deg,#081022,#07203a);border-radius:10px;display:block;width:100%;height:auto;max-width:680px;box-shadow:inset 0 0 90px rgba(0,0,0,0.35)}
+    .right{width:260px;min-width:220px;padding:6px 4px;display:flex;flex-direction:column;gap:10px}
+    h1{margin:0;font-size:20px}
+    .score, .best{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;font-weight:600;color:var(--muted)}
+    .controls{display:flex;gap:8px}
+    button{appearance:none;border:0;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);color:inherit;cursor:pointer;font-weight:600}
+    button.primary{background:linear-gradient(90deg,var(--accent),#ff9aa2);color:#081022}
+    .small{font-size:13px;color:var(--muted)}
+    .footer{font-size:12px;color:var(--muted);margin-top:8px}
+    .legend{display:flex;flex-direction:column;gap:6px;padding:8px;background:rgba(255,255,255,0.01);border-radius:8px}
+    .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
+    .mobile-cta{display:none}
+    @media (max-width:820px){
+      .card{flex-direction:column;align-items:stretch}
+      .right{width:100%}
+      .mobile-cta{display:block}
     }
   </style>
 </head>
 <body>
-  <h1>I ❤️ You</h1>
-  <p>Gửi đến người đặc biệt nhất 💌</p>
+  <div class="wrap">
+    <div class="card" role="application" aria-label="Game Rắn săn mồi">
+      <div class="left">
+        <h1>Snake — Rắn săn mồi 🐍</h1>
+        <canvas id="game" width="640" height="480" aria-label="Bàn chơi"></canvas>
+        <div class="small mobile-cta">Trên mobile: vuốt để đổi hướng. Chạm hai lần để tạm dừng.</div>
+      </div>
 
-  <script>
-    function createHeart() {
-      const heart = document.createElement("div");
-      heart.classList.add("heart");
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (2 + Math.random() * 3) + "s";
-      heart.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
-      document.body.appendChild(heart);
+      <aside class="right" aria-hidden="false">
+        <div class="score">Điểm: <span id="score">0</span></div>
+        <div class="best">Điểm cao: <span id="best">0</span></div>
 
-      setTimeout(() => heart.remove(), 4000);
+        <div class="legend">
+          <div class="row"><div class="small">Phím điều khiển</div><div class="small">← → ↑ ↓ / A D W S</div></div>
+          <div class="row"><div class="small">Bắt đầu</div><div class="small">Space / Nút Start</div></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
+          <div class="controls">
+            <button id="startBtn" class="primary">Start</button>
+            <button id="pauseBtn">Tạm dừng</button>
+            <button id="resetBtn">Reset</button>
+          </div>
+
+          <label class="small" style="display:flex;gap:8px;align-items:center">
+            <input id="toggleWrap" type="checkbox" checked /> <span>Cho rắn chạy qua cạnh (wrap)</span>
+          </label>
+
+          <label class="small" style="display:flex;gap:8px;align-items:center">
+            <input id="speedRange" type="range" min="4" max="18" value="10" /> <span id="speedLabel">Tốc độ: 10</span>
+          </label>
+
+          <div class="footer small">Lưu điểm cao trong trình duyệt (localStorage). Nhấn phím Space để bắt đầu/tạm dừng.</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+<script>
+/*
+  Game Snake đơn giản, single-file.
+  - WASD / arrow keys để điều khiển
+  - Space để bắt đầu / tạm dừng
+  - Lưu điểm cao trong localStorage
+  - Mobile: gesture swipe to change direction
+*/
+
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+let scale = 20;                // kích thước ô
+let cols = Math.floor(canvas.width / scale);
+let rows = Math.floor(canvas.height / scale);
+
+let snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
+let dir = {x:1, y:0};
+let nextDir = {x:1, y:0};
+let food = null;
+let score = 0;
+let best = Number(localStorage.getItem('snake_best') || 0);
+let running = false;
+let wrap = true;
+let speed = 10; // ticks per second
+let tickInterval = null;
+
+const scoreEl = document.getElementById('score');
+const bestEl = document.getElementById('best');
+bestEl.textContent = best;
+document.getElementById('toggleWrap').checked = wrap;
+const speedRange = document.getElementById('speedRange');
+const speedLabel = document.getElementById('speedLabel');
+speedRange.value = speed;
+speedLabel.textContent = 'Tốc độ: ' + speed;
+
+function resetGame(){
+  snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
+  dir = {x:1,y:0};
+  nextDir = {x:1,y:0};
+  score = 0;
+  placeFood();
+  updateScore();
+  running = false;
+  stopLoop();
+}
+
+function placeFood(){
+  let valid = false;
+  while(!valid){
+    const fx = Math.floor(Math.random() * cols);
+    const fy = Math.floor(Math.random() * rows);
+    if(!snake.some(s => s.x === fx && s.y === fy)){
+      food = {x: fx, y: fy};
+      valid = true;
     }
+  }
+}
 
-    setInterval(createHeart, 200);
-  </script>
+function draw(){
+  // clear
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // background grid subtle
+  ctx.fillStyle = '#07122a';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  // food
+  if(food){
+    ctx.fillStyle = '#ff6b6b';
+    roundRect(ctx, food.x*scale+2, food.y*scale+2, scale-4, scale-4, 6);
+    ctx.fill();
+  }
+
+  // snake
+  for(let i=0;i<snake.length;i++){
+    const s = snake[i];
+    const hue = 200 - Math.min(160, i*6);
+    ctx.fillStyle = i===0 ? '#a7ffeb' : `hsl(${hue}, 60%, ${50 - Math.min(30,i*0.6)}%)`;
+    roundRect(ctx, s.x*scale+1, s.y*scale+1, scale-2, scale-2, 6);
+    ctx.fill();
+  }
+
+  // overlay UI small
+  ctx.fillStyle = 'rgba(255,255,255,0.03)';
+  ctx.fillRect(6,6,110,28);
+}
+
+function roundRect(ctx, x, y, w, h, r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function step(){
+  // apply nextDir to dir but prevent reverse
+  if(!(nextDir.x === -dir.x && nextDir.y === -dir.y)){
+    dir = nextDir;
+  }
+
+  const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+  if(wrap){
+    if(head.x < 0) head.x = cols-1;
+    if(head.x >= cols) head.x = 0;
+    if(head.y < 0) head.y = rows-1;
+    if(head.y >= rows) head.y = 0;
+  } else {
+    // check wall collision
+    if(head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows){
+      return gameOver();
+    }
+  }
+
+  // check self collision
+  if(snake.some(seg => seg.x === head.x && seg.y === head.y)){
+    return gameOver();
+  }
+
+  snake.unshift(head);
+
+  // eat food?
+  if(food && head.x === food.x && head.y === food.y){
+    score += 1;
+    updateScore();
+    placeFood();
+  } else {
+    snake.pop();
+  }
+
+  draw();
+}
+
+function updateScore(){
+  scoreEl.textContent = score;
+  if(score > best){
+    best = score;
+    bestEl.textContent = best;
+    localStorage.setItem('snake_best', String(best));
+  }
+}
+
+function gameOver(){
+  running = false;
+  stopLoop();
+  // flash effect
+  for(let i=0;i<3;i++){
+    setTimeout(()=>ctx.fillStyle='rgba(255,80,80,0.06)', 50*i);
+  }
+  // reset after short delay
+  setTimeout(()=> {
+    alert('Game over! Điểm của bạn: ' + score);
+    resetGame();
+    draw();
+  }, 150);
+}
+
+function startLoop(){
+  if(tickInterval) clearInterval(tickInterval);
+  tickInterval = setInterval(step, 1000 / speed);
+}
+
+function stopLoop(){
+  if(tickInterval){ clearInterval(tickInterval); tickInterval = null; }
+}
+
+// controls
+window.addEventListener('keydown', (e)=>{
+  if(e.key === ' '){
+    e.preventDefault();
+    if(running){ running = false; stopLoop(); } else { running = true; startLoop(); }
+    return;
+  }
+  const k = e.key.toLowerCase();
+  if(k === 'arrowup' || k === 'w') { nextDir = {x:0,y:-1}; }
+  if(k === 'arrowdown' || k === 's') { nextDir = {x:0,y:1}; }
+  if(k === 'arrowleft' || k === 'a') { nextDir = {x:-1,y:0}; }
+  if(k === 'arrowright' || k === 'd') { nextDir = {x:1,y:0}; }
+});
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  if(!running){ running = true; startLoop(); }
+});
+document.getElementById('pauseBtn').addEventListener('click', ()=>{
+  running = false; stopLoop();
+});
+document.getElementById('resetBtn').addEventListener('click', ()=>{
+  if(confirm('Bạn muốn reset trò chơi?')) resetGame();
+});
+document.getElementById('toggleWrap').addEventListener('change', (e)=>{
+  wrap = e.target.checked;
+});
+speedRange.addEventListener('input', (e)=>{
+  speed = Number(e.target.value);
+  speedLabel.textContent = 'Tốc độ: ' + speed;
+  if(running) startLoop();
+});
+
+// responsive canvas scaling
+function fitCanvas(){
+  // keep 4:3 aspect ratio
+  const containerWidth = Math.min(680, window.innerWidth - 60);
+  const desiredW = containerWidth;
+  const desiredH = Math.floor(desiredW * 3 / 4);
+  canvas.style.width = desiredW + 'px';
+  canvas.style.height = desiredH + 'px';
+  // recalc cols/rows to keep whole-number grid
+  // keep internal resolution same to avoid blur, only visual scaling used
+}
+window.addEventListener('resize', fitCanvas);
+
+// mobile swipe controls
+let touchStart = null;
+canvas.addEventListener('touchstart', (e)=>{
+  if(e.touches.length === 1){
+    const t = e.touches[0];
+    touchStart = {x: t.clientX, y: t.clientY, time: Date.now()};
+  }
+});
+canvas.addEventListener('touchend', (e)=>{
+  if(!touchStart) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - touchStart.x;
+  const dy = t.clientY - touchStart.y;
+  const adx = Math.abs(dx), ady = Math.abs(dy);
+  if(Math.max(adx, ady) < 20){
+    // tap: toggle pause
+    if(running){ running = false; stopLoop(); } else { running = true; startLoop(); }
+  } else {
+    if(adx > ady){
+      nextDir = dx > 0 ? {x:1,y:0} : {x:-1,y:0};
+    } else {
+      nextDir = dy > 0 ? {x:0,y:1} : {x:0,y:-1};
+    }
+  }
+  touchStart = null;
+});
+
+// init
+placeFood();
+fitCanvas();
+draw();
+updateScore();
+resetGame(); // sets up game but not running
+
+// make canvas crisp on hi-dpi
+(function pixelRatio(){
+  const ratio = window.devicePixelRatio || 1;
+  const w = canvas.width;
+  const h = canvas.height;
+  canvas.width = w * ratio;
+  canvas.height = h * ratio;
+  canvas.style.width = w + 'px';
+  canvas.style.height = h + 'px';
+  ctx.scale(ratio, ratio);
+})();
+</script>
 </body>
 </html>
