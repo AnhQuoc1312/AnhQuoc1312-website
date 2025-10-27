@@ -1,47 +1,59 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>I Love You 💖</title>
+<title>Ngọc Yến (Bông) 💖</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
-    background: radial-gradient(circle at center, #ff9a9e, #fad0c4);
+    background-color: #000;
     overflow: hidden;
     height: 100vh;
-    color: #fff;
     text-align: center;
     font-family: 'Poppins', sans-serif;
+    color: #fff;
   }
   h1 {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 3em;
-    text-shadow: 0 0 10px #fff, 0 0 20px pink, 0 0 30px red;
-    animation: glow 2s ease-in-out infinite alternate;
+    text-shadow: 0 0 20px #ff99cc, 0 0 40px #ff6699, 0 0 60px #ff3366;
+    animation: glow 3s ease-in-out infinite alternate;
   }
   @keyframes glow {
-    from { text-shadow: 0 0 10px #fff, 0 0 20px pink; }
-    to { text-shadow: 0 0 30px #ff3366, 0 0 50px #ff6699; }
+    from { text-shadow: 0 0 20px #ffb3d9, 0 0 40px #ff66b2; }
+    to { text-shadow: 0 0 60px #ff1a75, 0 0 100px #ff4da6; }
   }
   video {
-    width: 80%;
-    max-width: 700px;
-    margin-top: 20px;
-    border-radius: 20px;
-    box-shadow: 0 0 30px rgba(255,255,255,0.6);
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -2;
+  }
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(255,0,100,0.2), rgba(0,0,0,0.8));
+    z-index: -1;
   }
   .hearts {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
     pointer-events: none;
-    overflow: hidden;
   }
   .heart {
     position: absolute;
     bottom: 0;
     width: 20px; height: 20px;
-    background: rgba(255, 0, 102, 0.8);
+    background: rgba(255, 100, 150, 0.8);
     transform: rotate(45deg);
     animation: floatUp 6s linear infinite;
   }
@@ -50,7 +62,7 @@
     content: "";
     position: absolute;
     width: 20px; height: 20px;
-    background: rgba(255, 0, 102, 0.8);
+    background: rgba(255, 100, 150, 0.8);
     border-radius: 50%;
   }
   .heart::before { top: -10px; left: 0; }
@@ -61,7 +73,7 @@
   }
   #musicBtn {
     position: fixed;
-    top: 20px; right: 20px;
+    bottom: 30px; right: 30px;
     background: rgba(255,255,255,0.2);
     border: none;
     color: #fff;
@@ -73,36 +85,33 @@
 </style>
 </head>
 <body>
-  <h1>I 💖 You</h1>
-
-  <!-- 🌹 Thay link video tại đây -->
-  <video controls autoplay loop>
-    <source src="https://cdn.pixabay.com/video/2022/04/13/113405-707283987_large.mp4" type="video/mp4">
-    Trình duyệt không hỗ trợ video.
+  <video autoplay loop muted playsinline>
+    <source src="https://cdn.pixabay.com/video/2023/01/31/148746-799405510_large.mp4" type="video/mp4">
   </video>
+  <div class="overlay"></div>
+  <h1>💖 Ngọc Yến (Bông) 💖</h1>
+  <div class="hearts"></div>
 
   <button id="musicBtn">🎵 Bật nhạc</button>
   <audio id="bgm" loop>
-    <source src="https://cdn.pixabay.com/audio/2021/09/13/audio_3a2b4f037a.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/08/audio_45a7b5e63d.mp3" type="audio/mpeg">
   </audio>
 
-  <div class="hearts"></div>
-
   <script>
-    // 💞 Tạo hiệu ứng tim bay
+    // 🌸 Tạo hiệu ứng tim bay
     const heartsContainer = document.querySelector('.hearts');
     function createHeart() {
       const heart = document.createElement('div');
       heart.classList.add('heart');
       heart.style.left = Math.random() * 100 + 'vw';
       heart.style.animationDuration = (4 + Math.random() * 3) + 's';
-      heart.style.background = `rgba(255, ${Math.random()*100}, ${150+Math.random()*100}, 0.8)`;
+      heart.style.background = `rgba(255, ${100+Math.random()*100}, ${150+Math.random()*105}, 0.8)`;
       heartsContainer.appendChild(heart);
       setTimeout(() => heart.remove(), 6000);
     }
     setInterval(createHeart, 300);
 
-    // 🎶 Nút bật/tắt nhạc
+    // 🎶 Nút bật / tắt nhạc
     const btn = document.getElementById('musicBtn');
     const bgm = document.getElementById('bgm');
     let playing = false;
