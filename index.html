@@ -2,62 +2,100 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Website của Anh Quốc</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>I Love You 💖</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      margin: 0;
+      overflow: hidden;
+      background: radial-gradient(circle at center, #ff9a9e, #fad0c4);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      font-family: "Poppins", sans-serif;
       color: white;
       text-align: center;
-      margin: 0;
-      padding: 0;
     }
-    header {
-      padding: 60px 20px;
-    }
+
     h1 {
-      font-size: 2.8em;
+      font-size: 4rem;
+      animation: pop 1.5s ease forwards;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.7);
+      z-index: 10;
     }
+
     p {
-      font-size: 1.2em;
+      font-size: 1.3rem;
+      opacity: 0.8;
+      z-index: 10;
     }
-    button {
-      background-color: white;
-      color: #2575fc;
-      border: none;
-      padding: 12px 25px;
-      font-size: 1em;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: 0.3s;
+
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      60% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
     }
-    button:hover {
-      background-color: #2575fc;
-      color: white;
+
+    .heart {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: floatUp 4s linear infinite;
     }
-    footer {
-      margin-top: 40px;
-      padding: 10px;
-      background: rgba(255, 255, 255, 0.2);
+
+    .heart::before,
+    .heart::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(45deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-600px) rotate(45deg);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Chào mừng đến với website của Anh Quốc 🚀</h1>
-    <p>Đây là website đầu tiên của tôi được tạo bằng GitHub Pages!</p>
-    <button onclick="sayHello()">Nhấn để chào!</button>
-  </header>
-
-  <footer>
-    © 2025 - Tạo bởi AnhQuoc1312
-  </footer>
+  <h1>I ❤️ You</h1>
+  <p>Gửi đến người đặc biệt nhất 💌</p>
 
   <script>
-    function sayHello() {
-      alert("Xin chào! Cảm ơn bạn đã ghé thăm website của Anh Quốc 💙");
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = (2 + Math.random() * 3) + "s";
+      heart.style.background = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 4000);
     }
+
+    setInterval(createHeart, 200);
   </script>
 </body>
 </html>
