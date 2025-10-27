@@ -1,1 +1,82 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #ffd6e7, #ffeaf2);
+  font-family: "Segoe UI", sans-serif;
+}
 
+.content {
+  position: relative;
+  text-align: center;
+  z-index: 10;
+}
+
+h1 {
+  color: #ff5c8d;
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px rgba(255,92,141,0.4);
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #ff99c8;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  transition: transform 0.2s, background 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background-color: #ff73b5;
+}
+
+#message {
+  font-size: 28px;
+  color: #ff387a;
+  margin-top: 20px;
+  animation: fadeIn 1s ease;
+}
+
+.hidden {
+  display: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Nền trái tim bay ngang */
+.hearts-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.heart {
+  position: absolute;
+  font-size: 22px;
+  color: #ff5c8d;
+  animation: fly 10s linear infinite;
+  top: calc(100vh * var(--y));
+}
+
+@keyframes fly {
+  from {
+    transform: translateX(-10vw) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(110vw) scale(1.3);
+    opacity: 0;
+  }
+}
