@@ -1,10 +1,63 @@
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-  <title>My GitHub Website</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Website của Anh Quốc</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      padding: 60px 20px;
+    }
+    h1 {
+      font-size: 2.8em;
+    }
+    p {
+      font-size: 1.2em;
+    }
+    button {
+      background-color: white;
+      color: #2575fc;
+      border: none;
+      padding: 12px 25px;
+      font-size: 1em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #2575fc;
+      color: white;
+    }
+    footer {
+      margin-top: 40px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.2);
+    }
+  </style>
 </head>
 <body>
-  <h1>Xin chào! Đây là website của tôi 🎉</h1>
-  <p>Tạo bằng GitHub Pages.</p>
+  <header>
+    <h1>Chào mừng đến với website của Anh Quốc 🚀</h1>
+    <p>Đây là website đầu tiên của tôi được tạo bằng GitHub Pages!</p>
+    <button onclick="sayHello()">Nhấn để chào!</button>
+  </header>
+
+  <footer>
+    © 2025 - Tạo bởi AnhQuoc1312
+  </footer>
+
+  <script>
+    function sayHello() {
+      alert("Xin chào! Cảm ơn bạn đã ghé thăm website của Anh Quốc 💙");
+    }
+  </script>
 </body>
 </html>
