@@ -3,147 +3,95 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Giới thiệu bản thân 🌈</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: linear-gradient(180deg, #000000, #111122);
-      overflow: hidden;
-      height: 100vh;
-      color: white;
-      font-family: "Poppins", sans-serif;
-      text-align: center;
-    }
-
-    /* Nền con mèo cầu vồng */
-    .nyan {
-      position: fixed;
-      width: 200px;
-      top: 50%;
-      left: -250px;
-      transform: translateY(-50%);
-      animation: fly 10s linear infinite;
-      z-index: -1;
-    }
-
-    @keyframes fly {
-      0% { left: -250px; }
-      100% { left: 110%; }
-    }
-
-    /* Thông tin chính */
-    .content {
-      position: relative;
-      z-index: 1;
-      padding-top: 10vh;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      color: #ff79c6;
-      text-shadow: 0 0 10px #ff66b2;
-      margin-bottom: 10px;
-      animation: glow 2s ease-in-out infinite alternate;
-    }
-
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #ff79c6, 0 0 20px #ff99cc; }
-      to { text-shadow: 0 0 30px #ff66b2, 0 0 50px #ff33a6; }
-    }
-
-    h2 {
-      font-size: 1.3em;
-      color: #8be9fd;
-      margin-bottom: 20px;
-    }
-
-    video {
-      width: 80%;
-      max-width: 600px;
-      border: 3px solid #ff79c6;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.2);
-    }
-
-    .contact {
-      margin-top: 20px;
-      font-size: 1em;
-    }
-
-    a {
-      color: #50fa7b;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    /* Nhạc nền */
-    #musicBtn {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background: rgba(255,255,255,0.1);
-      border: 1px solid #ff79c6;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: 0.3s;
-    }
-
-    #musicBtn:hover {
-      background: rgba(255,255,255,0.3);
-    }
-  </style>
+  <title>Giới thiệu bản thân</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- Video nền -->
+  <video autoplay loop muted playsinline id="bg-video">
+    <source src="video.mp4" type="video/mp4" />
+  </video>
 
-  <!-- 🐱 Con mèo cầu vồng -->
-  <img src="https://media.giphy.com/media/sIIhZliB2McAo/giphy.gif" alt="Nyan Cat" class="nyan" />
+  <!-- Lớp phủ hình nền khỉ -->
+  <div class="overlay"></div>
 
-  <!-- 🌟 Nội dung chính -->
+  <!-- Nội dung chính -->
   <div class="content">
-    <h1>Xin chào, mình là [Anh Quốc] 😺</h1>
-    <h2>Giới thiệu bản thân</h2>
-
-    <!-- 🎥 Video giới thiệu -->
-    <video controls poster="https://i.imgur.com/U6aG6Wf.png">
-      <source src="https://cdn.pixabay.com/video/2022/06/24/122083-724870698_large.mp4" type="video/mp4">
-      Trình duyệt của bạn không hỗ trợ video.
-    </video>
-
-    <div class="contact">
-      <p>📧 Email: <a href="mailto:youremail@gmail.com">youremail@gmail.com</a></p>
-      <p>💼 GitHub: <a href="https://github.com/yourusername" target="_blank">github.com/yourusername</a></p>
-      <p>📱 Facebook: <a href="https://facebook.com/yourusername" target="_blank">facebook.com/yourusername</a></p>
-    </div>
+    <img src="https://cdn.pixabay.com/photo/2014/04/02/10/55/monkey-303763_1280.png" alt="Monkey" class="avatar" />
+    <h1>Xin chào, mình là Anh Quốc 🐒</h1>
+    <p>Mình là một người yêu công nghệ, thích chơi game và khám phá điều mới lạ.</p>
+    <p>Liên hệ: <a href="mailto:youremail@example.com">youremail@example.com</a></p>
   </div>
 
-  <!-- 🎶 Nhạc nền -->
-  <audio id="bgm" loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/10/24/audio_4cb3d51d24.mp3" type="audio/mpeg">
-  </audio>
-  <button id="musicBtn">🎵 Bật nhạc</button>
-
-  <script>
-    const btn = document.getElementById('musicBtn');
-    const bgm = document.getElementById('bgm');
-    let playing = false;
-    btn.onclick = () => {
-      if (!playing) {
-        bgm.play();
-        btn.textContent = '🔇 Tắt nhạc';
-      } else {
-        bgm.pause();
-        btn.textContent = '🎵 Bật nhạc';
-      }
-      playing = !playing;
-    };
-  </script>
-
+  <script src="script.js"></script>
 </body>
 </html>
+🎨 2. style.css
+css
+Sao chép mã
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body, html {
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Video nền */
+#bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(50%);
+}
+
+/* Lớp phủ hình nền khỉ */
+.overlay {
+  background: url('https://cdn.pixabay.com/photo/2016/03/31/19/58/monkey-1299339_1280.png') center/contain no-repeat;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  z-index: -1;
+}
+
+/* Nội dung */
+.content {
+  text-align: center;
+  color: #fff;
+  position: relative;
+  top: 40%;
+  transform: translateY(-50%);
+}
+
+.avatar {
+  width: 150px;
+  border-radius: 50%;
+  border: 3px solid white;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 5px;
+}
+
+a {
+  color: #ffcc00;
+  text-decoration: none;
+}
