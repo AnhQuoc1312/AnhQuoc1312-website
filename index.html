@@ -3,170 +3,238 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Snake — Game Rắn Săn Mồi</title>
-  <meta name="description" content="Game Rắn săn mồi đơn giản - chơi trên GitHub Pages" />
+  <title>Game Đua Ngựa 🐎 — GitHub Pages</title>
+  <meta name="description" content="Game Đua Ngựa đơn giản: điều khiển ngựa, đua với 3 AI. Chạy trên GitHub Pages." />
   <style>
     :root{
-      --bg:#0f1724;
-      --panel:#0b1220;
-      --accent:#ff6b6b;
-      --muted:#9aa6b2;
-      --card:#0b1320;
+      --bg:#071026;
+      --panel:#0b1630;
+      --accent:#ffb86b;
+      --muted:#a8c0ff;
+      --ui:#e6eef6;
     }
     *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;background:linear-gradient(180deg,var(--bg),#071024);color:#e6eef6}
-    .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-    .card{
-      width:100%;max-width:920px;background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
-      border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);display:flex;gap:18px;align-items:flex-start;
-    }
-    .left{flex:1;display:flex;flex-direction:column;gap:12px;align-items:center}
-    canvas{background:linear-gradient(180deg,#081022,#07203a);border-radius:10px;display:block;width:100%;height:auto;max-width:680px;box-shadow:inset 0 0 90px rgba(0,0,0,0.35)}
-    .right{width:260px;min-width:220px;padding:6px 4px;display:flex;flex-direction:column;gap:10px}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,var(--bg),#03203a);color:var(--ui)}
+    .container{max-width:980px;margin:20px auto;padding:18px}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
     h1{margin:0;font-size:20px}
-    .score, .best{background:rgba(255,255,255,0.02);padding:8px;border-radius:8px;font-weight:600;color:var(--muted)}
-    .controls{display:flex;gap:8px}
-    button{appearance:none;border:0;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.04);color:inherit;cursor:pointer;font-weight:600}
-    button.primary{background:linear-gradient(90deg,var(--accent),#ff9aa2);color:#081022}
-    .small{font-size:13px;color:var(--muted)}
-    .footer{font-size:12px;color:var(--muted);margin-top:8px}
-    .legend{display:flex;flex-direction:column;gap:6px;padding:8px;background:rgba(255,255,255,0.01);border-radius:8px}
+    .top-right{display:flex;gap:8px;align-items:center}
+    button{appearance:none;border:0;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.04);color:inherit;cursor:pointer;font-weight:700}
+    button.primary{background:linear-gradient(90deg,var(--accent),#ff9a9a);color:#081022}
+    .layout{display:flex;gap:14px;margin-top:12px}
+    .left{flex:1}
+    canvas{width:100%;height:auto;border-radius:8px;background:linear-gradient(180deg,#06304a,#02233a);display:block}
+    .right{width:260px;min-width:200px;display:flex;flex-direction:column;gap:10px}
+    .panel{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px}
     .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-    .mobile-cta{display:none}
-    @media (max-width:820px){
-      .card{flex-direction:column;align-items:stretch}
-      .right{width:100%}
-      .mobile-cta{display:block}
-    }
+    .small{font-size:13px;color:var(--muted)}
+    .horse-info{display:flex;align-items:center;gap:8px}
+    .track{height:56px;border-radius:8px;overflow:hidden;background:linear-gradient(90deg,#0a2d2d,#052426)}
+    .legend{font-size:13px;color:var(--muted)}
+    footer{margin-top:12px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+    @media (max-width:860px){.layout{flex-direction:column}.right{width:100%}}
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card" role="application" aria-label="Game Rắn săn mồi">
-      <div class="left">
-        <h1>Snake — Rắn săn mồi 🐍</h1>
-        <canvas id="game" width="640" height="480" aria-label="Bàn chơi"></canvas>
-        <div class="small mobile-cta">Trên mobile: vuốt để đổi hướng. Chạm hai lần để tạm dừng.</div>
-      </div>
-
-      <aside class="right" aria-hidden="false">
-        <div class="score">Điểm: <span id="score">0</span></div>
-        <div class="best">Điểm cao: <span id="best">0</span></div>
-
-        <div class="legend">
-          <div class="row"><div class="small">Phím điều khiển</div><div class="small">← → ↑ ↓ / A D W S</div></div>
-          <div class="row"><div class="small">Bắt đầu</div><div class="small">Space / Nút Start</div></div>
+  <div class="container">
+    <div class="card" role="application" aria-label="Game đua ngựa">
+      <header>
+        <h1>Game Đua Ngựa 🐎</h1>
+        <div class="top-right">
+          <div class="small">Điều khiển: Nhấn/giữ <strong>Space</strong> hoặc <strong>chạm/nhấn màn hình</strong> để tăng tốc (player)</div>
         </div>
+      </header>
 
-        <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">
-          <div class="controls">
+      <div class="layout">
+        <div class="left">
+          <canvas id="race" width="900" height="360" aria-label="Bàn đua"></canvas>
+          <div style="display:flex;gap:8px;margin-top:8px">
             <button id="startBtn" class="primary">Start</button>
             <button id="pauseBtn">Tạm dừng</button>
             <button id="resetBtn">Reset</button>
+            <label class="small" style="align-self:center;margin-left:auto">Số vòng:
+              <select id="laps" style="margin-left:6px;padding:6px;border-radius:6px">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+              </select>
+            </label>
+          </div>
+        </div>
+
+        <aside class="right" aria-hidden="false">
+          <div class="panel">
+            <div class="row"><div class="small">Trạng thái</div><div id="status">Sẵn sàng</div></div>
+            <div class="row"><div class="small">Thời gian</div><div id="time">00:00.000</div></div>
+            <div class="row"><div class="small">Vòng</div><div id="lap">0 / 3</div></div>
+            <div style="height:8px"></div>
+            <div class="small">Danh sách ngựa</div>
+            <div id="horseList" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
           </div>
 
-          <label class="small" style="display:flex;gap:8px;align-items:center">
-            <input id="toggleWrap" type="checkbox" checked /> <span>Cho rắn chạy qua cạnh (wrap)</span>
-          </label>
+          <div class="panel">
+            <div class="small">Kỷ lục (fastest finish)</div>
+            <div id="bestRecord" style="font-weight:700;margin-top:6px">--</div>
+            <div class="small" style="margin-top:8px">Lưu trên trình duyệt (localStorage)</div>
+          </div>
+        </aside>
+      </div>
 
-          <label class="small" style="display:flex;gap:8px;align-items:center">
-            <input id="speedRange" type="range" min="4" max="18" value="10" /> <span id="speedLabel">Tốc độ: 10</span>
-          </label>
-
-          <div class="footer small">Lưu điểm cao trong trình duyệt (localStorage). Nhấn phím Space để bắt đầu/tạm dừng.</div>
-        </div>
-      </aside>
+      <footer>
+        <div class="legend">Mẹo: Bạn điều khiển Ngựa số 1. Giữ phím/nhấn lặp để tăng tốc.</div>
+        <div class="small">Sao chép file này vào repo và bật GitHub Pages để chơi online.</div>
+      </footer>
     </div>
   </div>
 
 <script>
-/*
-  Game Snake đơn giản, single-file.
-  - WASD / arrow keys để điều khiển
-  - Space để bắt đầu / tạm dừng
-  - Lưu điểm cao trong localStorage
-  - Mobile: gesture swipe to change direction
+/* Simple Horse Racing Game
+ - 4 horses, player controls horse 0 (nhấn space/giữ hoặc chạm)
+ - AI ngựa có tốc độ base + ngẫu nhiên
+ - Vòng đua đếm, finish khi đạt số vòng
+ - Lưu best time trong localStorage
 */
 
-const canvas = document.getElementById('game');
+const canvas = document.getElementById('race');
 const ctx = canvas.getContext('2d');
-let scale = 20;                // kích thước ô
-let cols = Math.floor(canvas.width / scale);
-let rows = Math.floor(canvas.height / scale);
 
-let snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
-let dir = {x:1, y:0};
-let nextDir = {x:1, y:0};
-let food = null;
-let score = 0;
-let best = Number(localStorage.getItem('snake_best') || 0);
+let W = canvas.width, H = canvas.height;
+function resizeCanvas(){
+  // keep canvas internal resolution same, CSS scales it
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = 900 * ratio;
+  canvas.height = 360 * ratio;
+  canvas.style.width = '100%';
+  canvas.style.height = 'auto';
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  W = canvas.width / ratio; H = canvas.height / ratio;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// game variables
+const NUM_HORSES = 4;
+const TRACK_PADDING = 30;
+const TRACK_HEIGHT = (H - TRACK_PADDING*2) / NUM_HORSES;
+const FINISH_LINE_X = W - 140;
+let lapsToRun = Number(document.getElementById('laps').value) || 3;
+
+const horses = [];
 let running = false;
-let wrap = true;
-let speed = 10; // ticks per second
-let tickInterval = null;
+let startedAt = null;
+let elapsed = 0;
+let lapDisplay = 0;
+let statusEl = document.getElementById('status');
+let timeEl = document.getElementById('time');
+let lapEl = document.getElementById('lap');
+let horseListEl = document.getElementById('horseList');
+let bestKey = 'horse_race_best_time';
+let bestRecordEl = document.getElementById('bestRecord');
+let best = Number(localStorage.getItem(bestKey) || 0);
+if(best>0) bestRecordEl.textContent = formatTime(best); else bestRecordEl.textContent = '--';
 
-const scoreEl = document.getElementById('score');
-const bestEl = document.getElementById('best');
-bestEl.textContent = best;
-document.getElementById('toggleWrap').checked = wrap;
-const speedRange = document.getElementById('speedRange');
-const speedLabel = document.getElementById('speedLabel');
-speedRange.value = speed;
-speedLabel.textContent = 'Tốc độ: ' + speed;
-
-function resetGame(){
-  snake = [{x: Math.floor(cols/2), y: Math.floor(rows/2)}];
-  dir = {x:1,y:0};
-  nextDir = {x:1,y:0};
-  score = 0;
-  placeFood();
-  updateScore();
-  running = false;
-  stopLoop();
-}
-
-function placeFood(){
-  let valid = false;
-  while(!valid){
-    const fx = Math.floor(Math.random() * cols);
-    const fy = Math.floor(Math.random() * rows);
-    if(!snake.some(s => s.x === fx && s.y === fy)){
-      food = {x: fx, y: fy};
-      valid = true;
-    }
+// create horses
+function initHorses(){
+  horses.length = 0;
+  for(let i=0;i<NUM_HORSES;i++){
+    horses.push({
+      id: i,
+      name: ['Số 1 (Bạn)','Số 2','Số 3','Số 4'][i] || 'Ngựa '+(i+1),
+      color: ['#ff6b6b','#ffd166','#8bd3ff','#b6ffb3'][i % 4],
+      x: 60,
+      y: TRACK_PADDING + i * TRACK_HEIGHT + TRACK_HEIGHT/2,
+      baseSpeed: 0.9 + Math.random()*0.6, // base movement per tick
+      speedBuff: 0, // temporary buff from player
+      lap: 0,
+      finished: false,
+      finishTime: 0
+    });
   }
+  renderHorseList();
 }
 
+function renderHorseList(){
+  horseListEl.innerHTML = '';
+  horses.forEach(h => {
+    const el = document.createElement('div');
+    el.className = 'row';
+    el.style.display = 'flex';
+    el.style.justifyContent = 'space-between';
+    el.style.alignItems = 'center';
+    el.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
+      <div style="width:12px;height:12px;background:${h.color};border-radius:4px"></div>
+      <div style="font-weight:700">${h.name}</div>
+    </div><div id="status-h-${h.id}" class="small">Vị trí: 0</div>`;
+    horseListEl.appendChild(el);
+  });
+}
+
+// draw track and horses
 function draw(){
-  // clear
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  // background
+  ctx.clearRect(0,0,W,H);
+  // grass
+  const grd = ctx.createLinearGradient(0,0,0,H);
+  grd.addColorStop(0,'#06304a'); grd.addColorStop(1,'#012033');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0,0,W,H);
 
-  // background grid subtle
-  ctx.fillStyle = '#07122a';
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-
-  // food
-  if(food){
-    ctx.fillStyle = '#ff6b6b';
-    roundRect(ctx, food.x*scale+2, food.y*scale+2, scale-4, scale-4, 6);
-    ctx.fill();
+  // draw lanes
+  for(let i=0;i<NUM_HORSES;i++){
+    const laneY = TRACK_PADDING + i*TRACK_HEIGHT;
+    ctx.fillStyle = i%2===0 ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)';
+    ctx.fillRect(40, laneY, W-80, TRACK_HEIGHT);
+    // lane marker
+    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.beginPath();
+    ctx.moveTo(40, laneY);
+    ctx.lineTo(W-100, laneY);
+    ctx.stroke();
   }
 
-  // snake
-  for(let i=0;i<snake.length;i++){
-    const s = snake[i];
-    const hue = 200 - Math.min(160, i*6);
-    ctx.fillStyle = i===0 ? '#a7ffeb' : `hsl(${hue}, 60%, ${50 - Math.min(30,i*0.6)}%)`;
-    roundRect(ctx, s.x*scale+1, s.y*scale+1, scale-2, scale-2, 6);
-    ctx.fill();
+  // finish line
+  ctx.fillStyle = '#fff';
+  for(let i=0;i<20;i++){
+    if(i%2===0) ctx.fillRect(FINISH_LINE_X + i*6, TRACK_PADDING, 6, H-TRACK_PADDING*2);
   }
+  ctx.font = '14px system-ui';
+  ctx.fillStyle = '#fff';
+  ctx.fillText('FINISH', FINISH_LINE_X+6, 22);
 
-  // overlay UI small
-  ctx.fillStyle = 'rgba(255,255,255,0.03)';
-  ctx.fillRect(6,6,110,28);
+  // draw horses
+  horses.forEach((h, idx) => {
+    // horse body (simple rectangle + head)
+    const hx = h.x;
+    const hy = h.y;
+    // shadow
+    ctx.fillStyle = 'rgba(0,0,0,0.25)';
+    ctx.beginPath(); ctx.ellipse(hx+18, hy+22, 28, 8, 0, 0, Math.PI*2); ctx.fill();
+
+    // body
+    ctx.fillStyle = h.color;
+    roundRect(ctx, hx, hy-14, 60, 28, 8);
+    ctx.fill();
+
+    // saddle / number
+    ctx.fillStyle = '#081022';
+    roundRect(ctx, hx+10, hy-12, 20, 20, 5); ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 14px system-ui'; ctx.fillText(String(h.id+1), hx+17, hy+3);
+
+    // name
+    ctx.font = '12px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.9)';
+    ctx.fillText(h.name, hx, hy-22);
+    // lap badge
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; roundRect(ctx, hx+44, hy-22, 32, 18, 6); ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.font='11px system-ui'; ctx.fillText('L:' + h.lap, hx+50, hy-10);
+  });
+
+  // debug
+  // ctx.fillStyle='#fff'; ctx.fillText('elapsed: '+elapsed.toFixed(2),20,20);
 }
 
-function roundRect(ctx, x, y, w, h, r){
+function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
   ctx.moveTo(x+r,y);
   ctx.arcTo(x+w,y,x+w,y+h,r);
@@ -176,168 +244,198 @@ function roundRect(ctx, x, y, w, h, r){
   ctx.closePath();
 }
 
-function step(){
-  // apply nextDir to dir but prevent reverse
-  if(!(nextDir.x === -dir.x && nextDir.y === -dir.y)){
-    dir = nextDir;
-  }
-
-  const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-
-  if(wrap){
-    if(head.x < 0) head.x = cols-1;
-    if(head.x >= cols) head.x = 0;
-    if(head.y < 0) head.y = rows-1;
-    if(head.y >= rows) head.y = 0;
-  } else {
-    // check wall collision
-    if(head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows){
-      return gameOver();
-    }
-  }
-
-  // check self collision
-  if(snake.some(seg => seg.x === head.x && seg.y === head.y)){
-    return gameOver();
-  }
-
-  snake.unshift(head);
-
-  // eat food?
-  if(food && head.x === food.x && head.y === food.y){
-    score += 1;
-    updateScore();
-    placeFood();
-  } else {
-    snake.pop();
-  }
-
+// game loop
+let raf = null;
+let lastTS = 0;
+function loop(ts){
+  if(!running){ lastTS = ts; raf = requestAnimationFrame(loop); return; }
+  if(!startedAt) startedAt = ts;
+  const dt = Math.min(40, ts - lastTS); // ms
+  lastTS = ts;
+  update(dt/1000);
   draw();
+  raf = requestAnimationFrame(loop);
 }
 
-function updateScore(){
-  scoreEl.textContent = score;
-  if(score > best){
-    best = score;
-    bestEl.textContent = best;
-    localStorage.setItem('snake_best', String(best));
+function update(dt){
+  // update elapsed
+  elapsed = (performance.now() - startedAt) || 0;
+  timeEl.textContent = formatTime(elapsed);
+
+  // update each horse
+  // player horse id 0: if boost active, give speed buff
+  horses.forEach(h => {
+    if(h.finished) return;
+    let move = h.baseSpeed * (50 + Math.random()*20) * dt; // base movement
+    // AI: slight randomness + slip
+    if(h.id !== 0){
+      // AI smarter when ahead/behind
+      const leaderX = Math.max(...horses.map(t=>t.x));
+      if(h.x < leaderX - 20) move *= 1.03; // try to catch up a bit
+      move *= (0.9 + Math.random()*0.3);
+    } else {
+      // player controlled: speedBuff applied
+      move *= (1 + (h.speedBuff || 0));
+      // natural slow down if not boosting
+    }
+    h.x += move;
+
+    // lap detection: when passing start line (x < startX) to FINISH? We'll count laps when passing FINISH_LINE_X
+    if(h.x >= FINISH_LINE_X && !h._passedFinish){
+      h._passedFinish = true;
+      h.lap += 1;
+      if(h.lap >= lapsToRun){
+        h.finished = true;
+        h.finishTime = elapsed;
+        onHorseFinish(h);
+      }
+    }
+    if(h.x < FINISH_LINE_X){
+      h._passedFinish = false;
+    }
+  });
+
+  // update UI horse positions (ranking)
+  const ranking = horses.slice().sort((a,b)=>b.x - a.x);
+  ranking.forEach((h, idx) => {
+    const el = document.getElementById('status-h-' + h.id);
+    if(el) el.textContent = 'Vị trí: ' + (idx+1);
+  });
+
+  // update lap display for player
+  const playerLap = horses[0].lap;
+  lapEl.textContent = `${playerLap} / ${lapsToRun}`;
+
+  // check if all finished
+  if(horses.every(h=>h.finished)){
+    endRace();
   }
 }
 
-function gameOver(){
+function onHorseFinish(h){
+  statusEl.textContent = `Ngựa ${h.id+1} hoàn thành (L:${h.lap})`;
+  // if player finished first overall update best
+  // check if all finished in endRace
+}
+
+function endRace(){
   running = false;
-  stopLoop();
-  // flash effect
-  for(let i=0;i<3;i++){
-    setTimeout(()=>ctx.fillStyle='rgba(255,80,80,0.06)', 50*i);
+  statusEl.textContent = 'Kết thúc cuộc đua';
+  // determine placement by finishTime or x
+  const finishedOrdered = horses.slice().sort((a,b)=>{
+    if(a.finishTime && b.finishTime) return a.finishTime - b.finishTime;
+    return b.x - a.x;
+  });
+  // show results
+  let resultMsg = 'Kết quả: ';
+  finishedOrdered.forEach((h, idx)=> resultMsg += `#${idx+1}: ${h.name} (${h.id+1})  `);
+  // update best if player is first
+  if(finishedOrdered[0].id === 0){
+    const time = horses[0].finishTime || elapsed;
+    if(!best || time < best || best===0){
+      best = time;
+      localStorage.setItem(bestKey, String(best));
+      bestRecordEl.textContent = formatTime(best);
+      alert('Bạn thắng! Kỷ lục mới: ' + formatTime(best));
+    } else {
+      alert('Bạn thắng! Thời gian: ' + formatTime(time));
+    }
+  } else {
+    // show summary
+    alert(resultMsg);
   }
-  // reset after short delay
-  setTimeout(()=> {
-    alert('Game over! Điểm của bạn: ' + score);
-    resetGame();
-    draw();
-  }, 150);
-}
-
-function startLoop(){
-  if(tickInterval) clearInterval(tickInterval);
-  tickInterval = setInterval(step, 1000 / speed);
-}
-
-function stopLoop(){
-  if(tickInterval){ clearInterval(tickInterval); tickInterval = null; }
 }
 
 // controls
-window.addEventListener('keydown', (e)=>{
-  if(e.key === ' '){
-    e.preventDefault();
-    if(running){ running = false; stopLoop(); } else { running = true; startLoop(); }
-    return;
-  }
-  const k = e.key.toLowerCase();
-  if(k === 'arrowup' || k === 'w') { nextDir = {x:0,y:-1}; }
-  if(k === 'arrowdown' || k === 's') { nextDir = {x:0,y:1}; }
-  if(k === 'arrowleft' || k === 'a') { nextDir = {x:-1,y:0}; }
-  if(k === 'arrowright' || k === 'd') { nextDir = {x:1,y:0}; }
-});
-
 document.getElementById('startBtn').addEventListener('click', ()=>{
-  if(!running){ running = true; startLoop(); }
+  if(!running){
+    startRace();
+  }
 });
 document.getElementById('pauseBtn').addEventListener('click', ()=>{
-  running = false; stopLoop();
+  running = !running;
+  statusEl.textContent = running ? 'Đang chạy' : 'Tạm dừng';
 });
 document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if(confirm('Bạn muốn reset trò chơi?')) resetGame();
+  if(confirm('Reset cuộc đua?')) resetRace();
 });
-document.getElementById('toggleWrap').addEventListener('change', (e)=>{
-  wrap = e.target.checked;
-});
-speedRange.addEventListener('input', (e)=>{
-  speed = Number(e.target.value);
-  speedLabel.textContent = 'Tốc độ: ' + speed;
-  if(running) startLoop();
+document.getElementById('laps').addEventListener('change',(e)=>{
+  lapsToRun = Number(e.target.value);
+  lapEl.textContent = `0 / ${lapsToRun}`;
 });
 
-// responsive canvas scaling
-function fitCanvas(){
-  // keep 4:3 aspect ratio
-  const containerWidth = Math.min(680, window.innerWidth - 60);
-  const desiredW = containerWidth;
-  const desiredH = Math.floor(desiredW * 3 / 4);
-  canvas.style.width = desiredW + 'px';
-  canvas.style.height = desiredH + 'px';
-  // recalc cols/rows to keep whole-number grid
-  // keep internal resolution same to avoid blur, only visual scaling used
+// player input: space to boost
+let boosting = false;
+function setBoost(active){
+  boosting = active;
+  const p = horses[0];
+  if(!p) return;
+  p.speedBuff = active ? 1.2 : 0; // 20% boost
 }
-window.addEventListener('resize', fitCanvas);
-
-// mobile swipe controls
-let touchStart = null;
-canvas.addEventListener('touchstart', (e)=>{
-  if(e.touches.length === 1){
-    const t = e.touches[0];
-    touchStart = {x: t.clientX, y: t.clientY, time: Date.now()};
-  }
+window.addEventListener('keydown',(e)=>{
+  if(e.code === 'Space'){ e.preventDefault(); setBoost(true); }
 });
-canvas.addEventListener('touchend', (e)=>{
-  if(!touchStart) return;
-  const t = e.changedTouches[0];
-  const dx = t.clientX - touchStart.x;
-  const dy = t.clientY - touchStart.y;
-  const adx = Math.abs(dx), ady = Math.abs(dy);
-  if(Math.max(adx, ady) < 20){
-    // tap: toggle pause
-    if(running){ running = false; stopLoop(); } else { running = true; startLoop(); }
-  } else {
-    if(adx > ady){
-      nextDir = dx > 0 ? {x:1,y:0} : {x:-1,y:0};
-    } else {
-      nextDir = dy > 0 ? {x:0,y:1} : {x:0,y:-1};
-    }
-  }
-  touchStart = null;
+window.addEventListener('keyup',(e)=>{
+  if(e.code === 'Space'){ setBoost(false); }
 });
 
-// init
-placeFood();
-fitCanvas();
+// mobile touch to boost (tap & hold)
+canvas.addEventListener('touchstart',(e)=>{ e.preventDefault(); setBoost(true); });
+canvas.addEventListener('touchend',(e)=>{ e.preventDefault(); setBoost(false); });
+
+// mouse click boost
+canvas.addEventListener('mousedown',(e)=> setBoost(true));
+window.addEventListener('mouseup',(e)=> setBoost(false));
+
+// game management
+function startRace(){
+  if(horses.every(h=>h.finished)){
+    resetRace();
+  }
+  running = true;
+  statusEl.textContent = 'Đang chạy';
+  if(!startedAt) startedAt = performance.now();
+  if(!raf) { lastTS = performance.now(); raf = requestAnimationFrame(loop); }
+}
+
+function resetRace(){
+  // reinit horses positions & states
+  initHorses();
+  horses.forEach(h=>{
+    h.x = 60;
+    h.lap = 0;
+    h.finished = false;
+    h.finishTime = 0;
+    h._passedFinish = false;
+    h.speedBuff = 0;
+    // tweak AI base speed slightly
+    h.baseSpeed = 0.9 + Math.random()*0.6;
+  });
+  lapsToRun = Number(document.getElementById('laps').value);
+  lapEl.textContent = `0 / ${lapsToRun}`;
+  elapsed = 0; startedAt = null; running = false;
+  statusEl.textContent = 'Sẵn sàng';
+  timeEl.textContent = '00:00.000';
+  renderHorseList();
+  draw();
+}
+
+// util format time
+function formatTime(ms){
+  if(!ms && ms!==0) return '--';
+  const total = Number(ms);
+  const s = Math.floor(total/1000);
+  const mm = Math.floor(s/60).toString().padStart(2,'0');
+  const ss = (s%60).toString().padStart(2,'0');
+  const msRem = Math.floor(total%1000).toString().padStart(3,'0');
+  return `${mm}:${ss}.${msRem}`;
+}
+
+// start up
+initHorses();
 draw();
-updateScore();
-resetGame(); // sets up game but not running
+raf = requestAnimationFrame(loop);
 
-// make canvas crisp on hi-dpi
-(function pixelRatio(){
-  const ratio = window.devicePixelRatio || 1;
-  const w = canvas.width;
-  const h = canvas.height;
-  canvas.width = w * ratio;
-  canvas.height = h * ratio;
-  canvas.style.width = w + 'px';
-  canvas.style.height = h + 'px';
-  ctx.scale(ratio, ratio);
-})();
 </script>
 </body>
 </html>
