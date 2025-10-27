@@ -1,441 +1,121 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Game Đua Ngựa 🐎 — GitHub Pages</title>
-  <meta name="description" content="Game Đua Ngựa đơn giản: điều khiển ngựa, đua với 3 AI. Chạy trên GitHub Pages." />
-  <style>
-    :root{
-      --bg:#071026;
-      --panel:#0b1630;
-      --accent:#ffb86b;
-      --muted:#a8c0ff;
-      --ui:#e6eef6;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial;background:linear-gradient(180deg,var(--bg),#03203a);color:var(--ui)}
-    .container{max-width:980px;margin:20px auto;padding:18px}
-    .card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));border-radius:12px;padding:16px;box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    h1{margin:0;font-size:20px}
-    .top-right{display:flex;gap:8px;align-items:center}
-    button{appearance:none;border:0;padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.04);color:inherit;cursor:pointer;font-weight:700}
-    button.primary{background:linear-gradient(90deg,var(--accent),#ff9a9a);color:#081022}
-    .layout{display:flex;gap:14px;margin-top:12px}
-    .left{flex:1}
-    canvas{width:100%;height:auto;border-radius:8px;background:linear-gradient(180deg,#06304a,#02233a);display:block}
-    .right{width:260px;min-width:200px;display:flex;flex-direction:column;gap:10px}
-    .panel{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px}
-    .row{display:flex;justify-content:space-between;align-items:center;padding:6px 0}
-    .small{font-size:13px;color:var(--muted)}
-    .horse-info{display:flex;align-items:center;gap:8px}
-    .track{height:56px;border-radius:8px;overflow:hidden;background:linear-gradient(90deg,#0a2d2d,#052426)}
-    .legend{font-size:13px;color:var(--muted)}
-    footer{margin-top:12px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
-    @media (max-width:860px){.layout{flex-direction:column}.right{width:100%}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Love You 💖</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: radial-gradient(circle at center, #ff9a9e, #fad0c4);
+    overflow: hidden;
+    height: 100vh;
+    color: #fff;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+  }
+  h1 {
+    font-size: 3em;
+    text-shadow: 0 0 10px #fff, 0 0 20px pink, 0 0 30px red;
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    from { text-shadow: 0 0 10px #fff, 0 0 20px pink; }
+    to { text-shadow: 0 0 30px #ff3366, 0 0 50px #ff6699; }
+  }
+  video {
+    width: 80%;
+    max-width: 700px;
+    margin-top: 20px;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.6);
+  }
+  .hearts {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .heart {
+    position: absolute;
+    bottom: 0;
+    width: 20px; height: 20px;
+    background: rgba(255, 0, 102, 0.8);
+    transform: rotate(45deg);
+    animation: floatUp 6s linear infinite;
+  }
+  .heart::before,
+  .heart::after {
+    content: "";
+    position: absolute;
+    width: 20px; height: 20px;
+    background: rgba(255, 0, 102, 0.8);
+    border-radius: 50%;
+  }
+  .heart::before { top: -10px; left: 0; }
+  .heart::after { left: -10px; top: 0; }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+    100% { transform: translateY(-100vh) rotate(45deg); opacity: 0; }
+  }
+  #musicBtn {
+    position: fixed;
+    top: 20px; right: 20px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <div class="card" role="application" aria-label="Game đua ngựa">
-      <header>
-        <h1>Game Đua Ngựa 🐎</h1>
-        <div class="top-right">
-          <div class="small">Điều khiển: Nhấn/giữ <strong>Space</strong> hoặc <strong>chạm/nhấn màn hình</strong> để tăng tốc (player)</div>
-        </div>
-      </header>
+  <h1>I 💖 You</h1>
 
-      <div class="layout">
-        <div class="left">
-          <canvas id="race" width="900" height="360" aria-label="Bàn đua"></canvas>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button id="startBtn" class="primary">Start</button>
-            <button id="pauseBtn">Tạm dừng</button>
-            <button id="resetBtn">Reset</button>
-            <label class="small" style="align-self:center;margin-left:auto">Số vòng:
-              <select id="laps" style="margin-left:6px;padding:6px;border-radius:6px">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3" selected>3</option>
-              </select>
-            </label>
-          </div>
-        </div>
+  <!-- 🌹 Thay link video tại đây -->
+  <video controls autoplay loop>
+    <source src="https://cdn.pixabay.com/video/2022/04/13/113405-707283987_large.mp4" type="video/mp4">
+    Trình duyệt không hỗ trợ video.
+  </video>
 
-        <aside class="right" aria-hidden="false">
-          <div class="panel">
-            <div class="row"><div class="small">Trạng thái</div><div id="status">Sẵn sàng</div></div>
-            <div class="row"><div class="small">Thời gian</div><div id="time">00:00.000</div></div>
-            <div class="row"><div class="small">Vòng</div><div id="lap">0 / 3</div></div>
-            <div style="height:8px"></div>
-            <div class="small">Danh sách ngựa</div>
-            <div id="horseList" style="display:flex;flex-direction:column;gap:6px;margin-top:6px"></div>
-          </div>
+  <button id="musicBtn">🎵 Bật nhạc</button>
+  <audio id="bgm" loop>
+    <source src="https://cdn.pixabay.com/audio/2021/09/13/audio_3a2b4f037a.mp3" type="audio/mpeg">
+  </audio>
 
-          <div class="panel">
-            <div class="small">Kỷ lục (fastest finish)</div>
-            <div id="bestRecord" style="font-weight:700;margin-top:6px">--</div>
-            <div class="small" style="margin-top:8px">Lưu trên trình duyệt (localStorage)</div>
-          </div>
-        </aside>
-      </div>
+  <div class="hearts"></div>
 
-      <footer>
-        <div class="legend">Mẹo: Bạn điều khiển Ngựa số 1. Giữ phím/nhấn lặp để tăng tốc.</div>
-        <div class="small">Sao chép file này vào repo và bật GitHub Pages để chơi online.</div>
-      </footer>
-    </div>
-  </div>
-
-<script>
-/* Simple Horse Racing Game
- - 4 horses, player controls horse 0 (nhấn space/giữ hoặc chạm)
- - AI ngựa có tốc độ base + ngẫu nhiên
- - Vòng đua đếm, finish khi đạt số vòng
- - Lưu best time trong localStorage
-*/
-
-const canvas = document.getElementById('race');
-const ctx = canvas.getContext('2d');
-
-let W = canvas.width, H = canvas.height;
-function resizeCanvas(){
-  // keep canvas internal resolution same, CSS scales it
-  const ratio = window.devicePixelRatio || 1;
-  canvas.width = 900 * ratio;
-  canvas.height = 360 * ratio;
-  canvas.style.width = '100%';
-  canvas.style.height = 'auto';
-  ctx.setTransform(ratio,0,0,ratio,0,0);
-  W = canvas.width / ratio; H = canvas.height / ratio;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-// game variables
-const NUM_HORSES = 4;
-const TRACK_PADDING = 30;
-const TRACK_HEIGHT = (H - TRACK_PADDING*2) / NUM_HORSES;
-const FINISH_LINE_X = W - 140;
-let lapsToRun = Number(document.getElementById('laps').value) || 3;
-
-const horses = [];
-let running = false;
-let startedAt = null;
-let elapsed = 0;
-let lapDisplay = 0;
-let statusEl = document.getElementById('status');
-let timeEl = document.getElementById('time');
-let lapEl = document.getElementById('lap');
-let horseListEl = document.getElementById('horseList');
-let bestKey = 'horse_race_best_time';
-let bestRecordEl = document.getElementById('bestRecord');
-let best = Number(localStorage.getItem(bestKey) || 0);
-if(best>0) bestRecordEl.textContent = formatTime(best); else bestRecordEl.textContent = '--';
-
-// create horses
-function initHorses(){
-  horses.length = 0;
-  for(let i=0;i<NUM_HORSES;i++){
-    horses.push({
-      id: i,
-      name: ['Số 1 (Bạn)','Số 2','Số 3','Số 4'][i] || 'Ngựa '+(i+1),
-      color: ['#ff6b6b','#ffd166','#8bd3ff','#b6ffb3'][i % 4],
-      x: 60,
-      y: TRACK_PADDING + i * TRACK_HEIGHT + TRACK_HEIGHT/2,
-      baseSpeed: 0.9 + Math.random()*0.6, // base movement per tick
-      speedBuff: 0, // temporary buff from player
-      lap: 0,
-      finished: false,
-      finishTime: 0
-    });
-  }
-  renderHorseList();
-}
-
-function renderHorseList(){
-  horseListEl.innerHTML = '';
-  horses.forEach(h => {
-    const el = document.createElement('div');
-    el.className = 'row';
-    el.style.display = 'flex';
-    el.style.justifyContent = 'space-between';
-    el.style.alignItems = 'center';
-    el.innerHTML = `<div style="display:flex;gap:10px;align-items:center">
-      <div style="width:12px;height:12px;background:${h.color};border-radius:4px"></div>
-      <div style="font-weight:700">${h.name}</div>
-    </div><div id="status-h-${h.id}" class="small">Vị trí: 0</div>`;
-    horseListEl.appendChild(el);
-  });
-}
-
-// draw track and horses
-function draw(){
-  // background
-  ctx.clearRect(0,0,W,H);
-  // grass
-  const grd = ctx.createLinearGradient(0,0,0,H);
-  grd.addColorStop(0,'#06304a'); grd.addColorStop(1,'#012033');
-  ctx.fillStyle = grd;
-  ctx.fillRect(0,0,W,H);
-
-  // draw lanes
-  for(let i=0;i<NUM_HORSES;i++){
-    const laneY = TRACK_PADDING + i*TRACK_HEIGHT;
-    ctx.fillStyle = i%2===0 ? 'rgba(255,255,255,0.02)' : 'rgba(0,0,0,0.02)';
-    ctx.fillRect(40, laneY, W-80, TRACK_HEIGHT);
-    // lane marker
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
-    ctx.beginPath();
-    ctx.moveTo(40, laneY);
-    ctx.lineTo(W-100, laneY);
-    ctx.stroke();
-  }
-
-  // finish line
-  ctx.fillStyle = '#fff';
-  for(let i=0;i<20;i++){
-    if(i%2===0) ctx.fillRect(FINISH_LINE_X + i*6, TRACK_PADDING, 6, H-TRACK_PADDING*2);
-  }
-  ctx.font = '14px system-ui';
-  ctx.fillStyle = '#fff';
-  ctx.fillText('FINISH', FINISH_LINE_X+6, 22);
-
-  // draw horses
-  horses.forEach((h, idx) => {
-    // horse body (simple rectangle + head)
-    const hx = h.x;
-    const hy = h.y;
-    // shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.25)';
-    ctx.beginPath(); ctx.ellipse(hx+18, hy+22, 28, 8, 0, 0, Math.PI*2); ctx.fill();
-
-    // body
-    ctx.fillStyle = h.color;
-    roundRect(ctx, hx, hy-14, 60, 28, 8);
-    ctx.fill();
-
-    // saddle / number
-    ctx.fillStyle = '#081022';
-    roundRect(ctx, hx+10, hy-12, 20, 20, 5); ctx.fill();
-    ctx.fillStyle = '#fff';
-    ctx.font = 'bold 14px system-ui'; ctx.fillText(String(h.id+1), hx+17, hy+3);
-
-    // name
-    ctx.font = '12px system-ui'; ctx.fillStyle = 'rgba(255,255,255,0.9)';
-    ctx.fillText(h.name, hx, hy-22);
-    // lap badge
-    ctx.fillStyle = 'rgba(0,0,0,0.35)'; roundRect(ctx, hx+44, hy-22, 32, 18, 6); ctx.fill();
-    ctx.fillStyle = '#fff'; ctx.font='11px system-ui'; ctx.fillText('L:' + h.lap, hx+50, hy-10);
-  });
-
-  // debug
-  // ctx.fillStyle='#fff'; ctx.fillText('elapsed: '+elapsed.toFixed(2),20,20);
-}
-
-function roundRect(ctx,x,y,w,h,r){
-  ctx.beginPath();
-  ctx.moveTo(x+r,y);
-  ctx.arcTo(x+w,y,x+w,y+h,r);
-  ctx.arcTo(x+w,y+h,x,y+h,r);
-  ctx.arcTo(x,y+h,x,y,r);
-  ctx.arcTo(x,y,x+w,y,r);
-  ctx.closePath();
-}
-
-// game loop
-let raf = null;
-let lastTS = 0;
-function loop(ts){
-  if(!running){ lastTS = ts; raf = requestAnimationFrame(loop); return; }
-  if(!startedAt) startedAt = ts;
-  const dt = Math.min(40, ts - lastTS); // ms
-  lastTS = ts;
-  update(dt/1000);
-  draw();
-  raf = requestAnimationFrame(loop);
-}
-
-function update(dt){
-  // update elapsed
-  elapsed = (performance.now() - startedAt) || 0;
-  timeEl.textContent = formatTime(elapsed);
-
-  // update each horse
-  // player horse id 0: if boost active, give speed buff
-  horses.forEach(h => {
-    if(h.finished) return;
-    let move = h.baseSpeed * (50 + Math.random()*20) * dt; // base movement
-    // AI: slight randomness + slip
-    if(h.id !== 0){
-      // AI smarter when ahead/behind
-      const leaderX = Math.max(...horses.map(t=>t.x));
-      if(h.x < leaderX - 20) move *= 1.03; // try to catch up a bit
-      move *= (0.9 + Math.random()*0.3);
-    } else {
-      // player controlled: speedBuff applied
-      move *= (1 + (h.speedBuff || 0));
-      // natural slow down if not boosting
+  <script>
+    // 💞 Tạo hiệu ứng tim bay
+    const heartsContainer = document.querySelector('.hearts');
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      heart.style.animationDuration = (4 + Math.random() * 3) + 's';
+      heart.style.background = `rgba(255, ${Math.random()*100}, ${150+Math.random()*100}, 0.8)`;
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 6000);
     }
-    h.x += move;
+    setInterval(createHeart, 300);
 
-    // lap detection: when passing start line (x < startX) to FINISH? We'll count laps when passing FINISH_LINE_X
-    if(h.x >= FINISH_LINE_X && !h._passedFinish){
-      h._passedFinish = true;
-      h.lap += 1;
-      if(h.lap >= lapsToRun){
-        h.finished = true;
-        h.finishTime = elapsed;
-        onHorseFinish(h);
+    // 🎶 Nút bật/tắt nhạc
+    const btn = document.getElementById('musicBtn');
+    const bgm = document.getElementById('bgm');
+    let playing = false;
+    btn.onclick = () => {
+      if (!playing) {
+        bgm.play();
+        btn.textContent = '🔇 Tắt nhạc';
+      } else {
+        bgm.pause();
+        btn.textContent = '🎵 Bật nhạc';
       }
-    }
-    if(h.x < FINISH_LINE_X){
-      h._passedFinish = false;
-    }
-  });
-
-  // update UI horse positions (ranking)
-  const ranking = horses.slice().sort((a,b)=>b.x - a.x);
-  ranking.forEach((h, idx) => {
-    const el = document.getElementById('status-h-' + h.id);
-    if(el) el.textContent = 'Vị trí: ' + (idx+1);
-  });
-
-  // update lap display for player
-  const playerLap = horses[0].lap;
-  lapEl.textContent = `${playerLap} / ${lapsToRun}`;
-
-  // check if all finished
-  if(horses.every(h=>h.finished)){
-    endRace();
-  }
-}
-
-function onHorseFinish(h){
-  statusEl.textContent = `Ngựa ${h.id+1} hoàn thành (L:${h.lap})`;
-  // if player finished first overall update best
-  // check if all finished in endRace
-}
-
-function endRace(){
-  running = false;
-  statusEl.textContent = 'Kết thúc cuộc đua';
-  // determine placement by finishTime or x
-  const finishedOrdered = horses.slice().sort((a,b)=>{
-    if(a.finishTime && b.finishTime) return a.finishTime - b.finishTime;
-    return b.x - a.x;
-  });
-  // show results
-  let resultMsg = 'Kết quả: ';
-  finishedOrdered.forEach((h, idx)=> resultMsg += `#${idx+1}: ${h.name} (${h.id+1})  `);
-  // update best if player is first
-  if(finishedOrdered[0].id === 0){
-    const time = horses[0].finishTime || elapsed;
-    if(!best || time < best || best===0){
-      best = time;
-      localStorage.setItem(bestKey, String(best));
-      bestRecordEl.textContent = formatTime(best);
-      alert('Bạn thắng! Kỷ lục mới: ' + formatTime(best));
-    } else {
-      alert('Bạn thắng! Thời gian: ' + formatTime(time));
-    }
-  } else {
-    // show summary
-    alert(resultMsg);
-  }
-}
-
-// controls
-document.getElementById('startBtn').addEventListener('click', ()=>{
-  if(!running){
-    startRace();
-  }
-});
-document.getElementById('pauseBtn').addEventListener('click', ()=>{
-  running = !running;
-  statusEl.textContent = running ? 'Đang chạy' : 'Tạm dừng';
-});
-document.getElementById('resetBtn').addEventListener('click', ()=>{
-  if(confirm('Reset cuộc đua?')) resetRace();
-});
-document.getElementById('laps').addEventListener('change',(e)=>{
-  lapsToRun = Number(e.target.value);
-  lapEl.textContent = `0 / ${lapsToRun}`;
-});
-
-// player input: space to boost
-let boosting = false;
-function setBoost(active){
-  boosting = active;
-  const p = horses[0];
-  if(!p) return;
-  p.speedBuff = active ? 1.2 : 0; // 20% boost
-}
-window.addEventListener('keydown',(e)=>{
-  if(e.code === 'Space'){ e.preventDefault(); setBoost(true); }
-});
-window.addEventListener('keyup',(e)=>{
-  if(e.code === 'Space'){ setBoost(false); }
-});
-
-// mobile touch to boost (tap & hold)
-canvas.addEventListener('touchstart',(e)=>{ e.preventDefault(); setBoost(true); });
-canvas.addEventListener('touchend',(e)=>{ e.preventDefault(); setBoost(false); });
-
-// mouse click boost
-canvas.addEventListener('mousedown',(e)=> setBoost(true));
-window.addEventListener('mouseup',(e)=> setBoost(false));
-
-// game management
-function startRace(){
-  if(horses.every(h=>h.finished)){
-    resetRace();
-  }
-  running = true;
-  statusEl.textContent = 'Đang chạy';
-  if(!startedAt) startedAt = performance.now();
-  if(!raf) { lastTS = performance.now(); raf = requestAnimationFrame(loop); }
-}
-
-function resetRace(){
-  // reinit horses positions & states
-  initHorses();
-  horses.forEach(h=>{
-    h.x = 60;
-    h.lap = 0;
-    h.finished = false;
-    h.finishTime = 0;
-    h._passedFinish = false;
-    h.speedBuff = 0;
-    // tweak AI base speed slightly
-    h.baseSpeed = 0.9 + Math.random()*0.6;
-  });
-  lapsToRun = Number(document.getElementById('laps').value);
-  lapEl.textContent = `0 / ${lapsToRun}`;
-  elapsed = 0; startedAt = null; running = false;
-  statusEl.textContent = 'Sẵn sàng';
-  timeEl.textContent = '00:00.000';
-  renderHorseList();
-  draw();
-}
-
-// util format time
-function formatTime(ms){
-  if(!ms && ms!==0) return '--';
-  const total = Number(ms);
-  const s = Math.floor(total/1000);
-  const mm = Math.floor(s/60).toString().padStart(2,'0');
-  const ss = (s%60).toString().padStart(2,'0');
-  const msRem = Math.floor(total%1000).toString().padStart(3,'0');
-  return `${mm}:${ss}.${msRem}`;
-}
-
-// start up
-initHorses();
-draw();
-raf = requestAnimationFrame(loop);
-
-</script>
+      playing = !playing;
+    };
+  </script>
 </body>
 </html>
