@@ -3,73 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lời chúc thi tốt ❤️</title>
+  <title>Giới thiệu bản thân - Nguyễn Văn A</title>
   <style>
     body {
-      margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
       font-family: 'Segoe UI', sans-serif;
-      color: #fff;
+      background: linear-gradient(to right, #00c6ff, #0072ff);
+      color: white;
       text-align: center;
-      overflow: hidden;
+      padding: 50px;
     }
-
-    h1 {
-      font-size: 3em;
-      text-shadow: 2px 2px 10px rgba(255,255,255,0.4);
-      animation: float 3s ease-in-out infinite;
-    }
-
-    p {
-      font-size: 1.5em;
-      max-width: 600px;
-      line-height: 1.6;
+    img {
+      border-radius: 50%;
+      width: 150px;
       margin-top: 20px;
     }
-
-    @keyframes float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-10px); }
-    }
-
-    /* Hiệu ứng trái tim rơi */
-    .heart {
-      position: fixed;
-      top: -10px;
-      color: #ffdde1;
-      font-size: 20px;
-      animation: fall linear infinite;
-    }
-
-    @keyframes fall {
-      to {
-        transform: translateY(110vh);
-      }
+    a {
+      color: yellow;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>💖 Chúc bạn thi thật tốt 💖</h1>
-  <p>Mỗi giọt mồ hôi hôm nay sẽ là niềm tự hào ngày mai.<br>
-  Hãy tin vào bản thân, nỗ lực hết mình — thành công sẽ mỉm cười với bạn! 🍀</p>
-
-  <script>
-    // Tạo hiệu ứng trái tim rơi
-    function createHeart() {
-      const heart = document.createElement('div');
-      heart.classList.add('heart');
-      heart.innerHTML = '💗';
-      heart.style.left = Math.random() * 100 + 'vw';
-      heart.style.animationDuration = (2 + Math.random() * 3) + 's';
-      document.body.appendChild(heart);
-      setTimeout(() => heart.remove(), 5000);
-    }
-    setInterval(createHeart, 300);
-  </script>
+  <h1>Xin chào, mình là Nguyễn Văn A 👋</h1>
+  <img src="https://avatars.githubusercontent.com/u/1?v=4" alt="Ảnh đại diện">
+  <p>Mình là một lập trình viên yêu thích web và công nghệ.</p>
+  <p>📧 Email: <a href="mailto:nguyenvana@gmail.com">nguyenvana@gmail.com</a></p>
+  <p>🌐 GitHub: <a href="https://github.com/nguyenvana">github.com/nguyenvana</a></p>
 </body>
 </html>
